@@ -1,11 +1,9 @@
 %lex
 %%
 
+\n+                   return 'NEWLINE'
 \s+                   /* skip whitespace */
-';'\s*                /* skip comments */
-\r\n                  return 'NEWLINE'
-\r                    return 'NEWLINE'
-\n                    return 'NEWLINE'
+';'.*                 /* skip comments */
 ':'                   return ':'
 ','                   return ','
 '['                   return '['
@@ -43,14 +41,18 @@
 %% /* language grammar */
 
 program
-	: stmt                              { return $1; }
-	| stmt EOF                          { return $1; }
-	| stmt NEWLINE program              { $$ = [$1].concat($2); };
+	: NEWLINE stmts                     { return $2; }
+	| stmts                             { return $1; };
+
+stmts
+	: stmt                              { $$ = $1; }
+	| stmt EOF                          { $$ = $1; }
+	| stmt NEWLINE stmts                { $$ = [$1].concat($3); };
 
 stmt
-	: ':' LABEL                         { $$ = 0; }
-	| basicOp numOrReg ',' numOrReg     { $$ = $1; }
-	| JSR numOrLabel                    { $$ = 0; };
+	: ':' LABEL                         { $$ = $2; }
+	| basicOp numOrReg ',' numOrReg     { $$ = $2; }
+	| JSR numOrLabel                    { $$ = $2; };
 
 basicOp
 	: SET                               { $$ = $1 }
