@@ -3,5 +3,5 @@
 while true
 do
 	inotifywait -q -r -e close_write src/
-	make
+	make all
 done
