@@ -15,7 +15,7 @@ TESTJS  = $(subst src/,,$(TESTSRC:.coffee=.js))
 
 all: out/parser.js $(JS) $(TESTJS)
 	cat out/start.js out/parser.js $(JS) out/end.js >out/dcpu-16.js
-	rm $(JS)
+	rm out/parser.js $(JS)
 
 test: $(TESTJS)	
 	#RES  = cat $@ sed -n '/<</,/>>/p' | sed 's/^[ \t]*//'
